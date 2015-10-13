@@ -1,5 +1,6 @@
 import ROOT
 import sys, os, select
+from contextlib import contextmanager
 
 # Here functions are defined to process C++ code
 def processCppCodeImpl(code):
@@ -16,6 +17,12 @@ def processCppCode(code):
 def declareCppCode(code):
     declareCppCodeImpl(code)
 
+@contextmanager
+def _setIgnoreLevel(level):
+    originalLevel = ROOT.gErrorIgnoreLevel
+    ROOT.gErrorIgnoreLevel = level
+    yield
+    ROOT.gErrorIgnoreLevel = originalLevel
 
 
 class StreamCapture(object):
