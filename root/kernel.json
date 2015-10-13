@@ -1,0 +1,10 @@
+{
+  "display_name": "ROOT",
+  "argv": [
+      "python",
+      "-m",
+      "rootkernel",
+      "-f",
+      "{connection_file}"
+  ]
+}
