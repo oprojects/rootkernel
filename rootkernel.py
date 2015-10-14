@@ -87,8 +87,9 @@ class ROOTKernel(MetaKernel):
             ## Send output on stdout
             #stream_content_stdout = {'name': 'stdout', 'text': stdout}
             #self.send_response(self.iopub_socket, 'stream', stream_content_stdout)
-            stream_content_stderr = {'name': 'stderr', 'text': std_err}
-            self.send_response(self.iopub_socket, 'stream', stream_content_stderr)
+            if std_err != "":
+                stream_content_stderr = {'name': 'stderr', 'text': std_err}
+                self.send_response(self.iopub_socket, 'stream', stream_content_stderr)
             
         reply = {'status': status,
                 'execution_count': self.execution_count,
