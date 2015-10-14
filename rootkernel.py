@@ -41,7 +41,7 @@ class ROOTKernel(MetaKernel):
                      'codemirror_mode': 'text/x-c++src',
                      'mimetype': ' text/x-c++src',
                      'file_extension': '.C'}
-    banner = "CERN's ROOT Kernel"
+    banner = "CERN's ROOT Kernel(ROOTaaS)"
     def __init__(self,**kwargs):
         
         MetaKernel.__init__(self,**kwargs)
