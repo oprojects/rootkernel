@@ -19,7 +19,7 @@ from rootkernelutils import StreamCapture, CanvasDrawer
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
 
-_debug = True
+_debug = False
 
 
 def Debug(msg):
@@ -47,7 +47,6 @@ class ROOTKernel(MetaKernel):
         self._stdout = StreamCapture(sys.stdout)
         self.completer = CppCompleter()
         self.completer.activate()
-        self.drawer_capturer = utils.CaptureDrawnCanvases()
 
     def get_completions(self, info):
         if _debug :Debug(info)
@@ -68,13 +67,16 @@ class ROOTKernel(MetaKernel):
             std_out = self._stdout.post_execute()
             if not _debug : std_err = self._stderr.post_execute()
             if ROOT.gPad:
-	         if ROOT.gPad.IsDrawn():
-                     self.drawer = CanvasDrawer(ROOT.gPad)
-                     if self.drawer._canJsDisplay():
-                         display(HTML(self.drawer.jsCode()))
-                     else:
-                         display(self.drawer.pngImg())
-            self.drawer_capturer._post_execute()
+                 if ROOT.gPad.IsDrawn():
+                     canvaslist = ROOT.gROOT.GetListOfCanvases()
+                     for canvas in canvaslist:
+                          if canvas.IsDrawn():
+                               self.drawer = CanvasDrawer(canvas)
+                               if self.drawer._canJsDisplay():
+                                    display(HTML(self.drawer.jsCode()))
+                               else:
+                                    display(self.drawer.pngImg())
+                               canvas.ResetDrawn()
             
         except KeyboardInterrupt:
             self.interpreter.gROOT.SetInterrupt()

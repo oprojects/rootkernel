@@ -27,8 +27,7 @@ class CanvasDrawer(InternalCanvasDrawer):
         
     def jsCode(self):
         # Workaround to have ConvertToJSON work
-        pad = ROOT.gROOT.GetListOfCanvases().FindObject(ROOT.gPad.GetName())
-        json = ROOT.TBufferJSON.ConvertToJSON(pad, 3)
+        json = ROOT.TBufferJSON.ConvertToJSON(self.thePad, 3)
         #print "JSON:",json
 
         # Here we could optimise the string manipulation
