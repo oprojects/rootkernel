@@ -70,7 +70,10 @@ class ROOTKernel(MetaKernel):
             if ROOT.gPad:
 	         if ROOT.gPad.IsDrawn():
                      self.drawer = CanvasDrawer(ROOT.gPad)
-                     display(HTML(self.drawer.jsCode()))
+                     if self.drawer._canJsDisplay():
+                         display(HTML(self.drawer.jsCode()))
+                     else:
+                         display(self.drawer.pngImg())
             self.drawer_capturer._post_execute()
             
         except KeyboardInterrupt:

@@ -1,10 +1,11 @@
 import ROOT
-import sys, os, select
+import sys, os, select, tempfile
 from ROOTaaS.iPyROOT.utils import StreamCapture as InternalStreamCapture
 from ROOTaaS.iPyROOT.utils import CanvasDrawer as InternalCanvasDrawer
 
-from ROOTaaS.iPyROOT.utils import _jsCanvasWidth, _jsCanvasHeight, _jsROOTSourceDir, _jsCode
+from ROOTaaS.iPyROOT.utils import _jsCanvasWidth, _jsCanvasHeight, _jsROOTSourceDir, _jsCode, _setIgnoreLevel
 
+import IPython
 
 class StreamCapture(InternalStreamCapture):
     def __init__(self,stream):
@@ -40,4 +41,11 @@ class CanvasDrawer(InternalCanvasDrawer):
                                     jsDivId = divId)
 
         return thisJsCode 
-  
+
+    def pngImg(self):
+        ofile = tempfile.NamedTemporaryFile(suffix=".png")
+        with _setIgnoreLevel(ROOT.kError):
+            self.thePad.SaveAs(ofile.name)
+        img = IPython.display.Image(filename=ofile.name, format='png', embed=True)
+        return img
+     
