@@ -4,23 +4,44 @@ from __future__ import print_function
 
 import sys, os, select, tempfile
 
+#trying to find ROOT lib path to PYTHONPATH 
+#NOTE: required for hupyterhub              
+try:
+    ROOT_PYTHON_PATH = os.popen("root-config --libdir")
+    os.environ['PYTHONPATH'] = os.environ['PYTHONPATH']+":"+ROOT_PYTHON_PATH.read()
+    ROOT_PYTHON_PATH.close()
+except Exception as e:
+    pass
+
+
 #ROOT related imports
-import ROOT
-from ROOTaaS.iPyROOT import utils 
-from ROOTaaS.iPyROOT.cppcompleter import CppCompleter
+try:
+    import ROOT
+except ImportError:
+    raise ConfigError("Error: PyROOT not found")
+
+
+try:
+    from ROOTaaS.iPyROOT import utils 
+    from ROOTaaS.iPyROOT.cppcompleter import CppCompleter
+except ImportError:
+    raise ConfigError("Error: ROOTaaS not found")
+     
 
 
 import IPython
 
-from metakernel import MetaKernel
-from metakernel.display import clear_output, display, HTML
+try:
+    from metakernel import MetaKernel
+    from metakernel.display import clear_output, display, HTML
+except ImportError:
+    raise ConfigError("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
 from rootkernelutils import StreamCapture, CanvasDrawer
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
 
 _debug = False
-
 
 def Debug(msg):
      print('out: %r' % msg, file=sys.__stderr__)
