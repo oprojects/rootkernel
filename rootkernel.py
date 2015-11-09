@@ -2,31 +2,25 @@
 
 from __future__ import print_function
 
-import ROOT
 import sys, os, select, tempfile
 
-try:
-    from ipykernel.kernelbase import Kernel
-except ImportError:
-    from IPython.kernel.zmq.kernelbase import Kernel
+#ROOT related imports
+import ROOT
+from ROOTaaS.iPyROOT import utils 
+from ROOTaaS.iPyROOT.cppcompleter import CppCompleter
+
 
 import IPython
 
 from metakernel import MetaKernel
 from metakernel.display import clear_output, display, HTML
 
-from rootkernelutils import StreamCapture, CppCompleter,_setIgnoreLevel
+from rootkernelutils import StreamCapture, CanvasDrawer
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
 
-_debug = False
+_debug = True
 
-
-def ResetCanvas():
-    for can in ROOT.gROOT.GetListOfCanvases():
-       if can.IsDrawn():
-          can.Draw()
-          can.ResetDrawn()
 
 def Debug(msg):
      print('out: %r' % msg, file=sys.__stderr__)
@@ -45,10 +39,15 @@ class ROOTKernel(MetaKernel):
     def __init__(self,**kwargs):
         
         MetaKernel.__init__(self,**kwargs)
+        utils.enableJSVis()
+        utils.enableJSVisDebug()
+        utils.setStyle()
+        utils.enhanceROOTModule()
         self._stderr = StreamCapture(sys.stderr)
         self._stdout = StreamCapture(sys.stdout)
         self.completer = CppCompleter()
         self.completer.activate()
+        self.drawer_capturer = utils.CaptureDrawnCanvases()
 
     def get_completions(self, info):
         if _debug :Debug(info)
@@ -66,17 +65,13 @@ class ROOTKernel(MetaKernel):
             root_status = ROOT.gROOT.ProcessLine(code)
             self._stdout.flush()
             if not _debug : self._stderr.flush()
-            std_out = self._stdout.post_execute();
-            if not _debug : std_err = self._stderr.post_execute();
-            
+            std_out = self._stdout.post_execute()
+            if not _debug : std_err = self._stderr.post_execute()
             if ROOT.gPad:
 	         if ROOT.gPad.IsDrawn():
-                     ofile = tempfile.NamedTemporaryFile(suffix=".png")
-                     with _setIgnoreLevel(ROOT.kError):
-                         ROOT.gPad.SaveAs(ofile.name)
-                     img = IPython.display.Image(filename=ofile.name, format='png', embed=True)
-                     display(img)
-                     ResetCanvas()
+                     self.drawer = CanvasDrawer(ROOT.gPad)
+                     display(HTML(self.drawer.jsCode()))
+            self.drawer_capturer._post_execute()
             
         except KeyboardInterrupt:
             self.interpreter.gROOT.SetInterrupt()
@@ -120,7 +115,6 @@ def main():
     except ImportError:
         from IPython.kernel.zmq.kernelapp import IPKernelApp
     IPKernelApp.launch_instance(kernel_class=ROOTKernel)
-
 
 if __name__ == '__main__':
     main()
