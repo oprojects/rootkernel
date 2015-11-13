@@ -1,11 +1,17 @@
 # ROOT Kernel
 
-ROOT Kernel for Jupyter.
+ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
+
+## Features
+* C++  highlighting
+* Tab-completion
+* JSROOT implemented
 
 ## Limitations
 * It dont support declare functions in cell, but classes is supported if methods are declare inside
-* The plots are only in png, JSROOT will be implemented soon
 * The plot just work if the method Draw is called by TCanvas's object
+* It dont c++ tracebacks 
+* Magics not implemented yet.
 
 ## Install
 
