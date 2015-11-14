@@ -35,7 +35,7 @@ except ImportError:
     raise ConfigError("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
 from rootkernelutils import StreamCapture, CanvasDrawer
-from rootkernelmagics import CppMagics
+from rootkernelmagics import MagicLoader
      
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
@@ -63,7 +63,9 @@ class ROOTKernel(MetaKernel):
         utils.enableJSVisDebug()
         utils.setStyle()
         utils.enhanceROOTModule()
-        self.register_magics(CppMagics)
+        self.magicloader=MagicLoader(self)
+        
+        #self.register_magics(CppMagics)
         self.parser = Parser(self.identifier_regex, self.func_call_regex,
                              self.magic_prefixes, self.help_suffix)
         self._stderr = StreamCapture(sys.stderr)
@@ -79,12 +81,6 @@ class ROOTKernel(MetaKernel):
     def do_execute_direct(self, code, silent=False):
         
         if not code.strip():
-            self.resp = {
-                'status': 'ok',
-                'execution_count': self.execution_count,
-                'payload': [],
-                'user_expressions': {},
-            }
             return
 
         status = 'ok'

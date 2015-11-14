@@ -36,11 +36,20 @@ pjoin = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
 pkg_root = pjoin(here, name)
 
+MAGICSPATH = "ROOTDMaaS/Magics/"
 
+##reading ROOT modules and Magics
+root_modules = ['rootkernel','rootkernelutils','rootkernelmagics','ROOTDMaaS/__init__']
+os.chdir(MAGICSPATH)
+for file in glob("*.py"):
+    root_modules.append(MAGICSPATH+file.replace(".py",""))
+os.chdir("../..")
+#print(root_modules)
+    
 setup_args = dict(
     name            = name,
     version         = '0.0.1',
-    py_modules      = ['rootkernel','rootkernelutils','rootkernelmagics'],
+    py_modules      = root_modules,
     scripts         = glob(pjoin('scripts', '*')),
     description     = "ROOT/C++ Kernel for Jupyter",
     author          = 'Omar Zapata, Danilo Piparo, Enric Tejedor',
