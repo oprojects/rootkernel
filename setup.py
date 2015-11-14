@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Copyright (c) Omar Zapata
+# Copyright (c) Omar Zapata, Danilo Piparo, Enric Tejedor and ROOT Team.
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import print_function
@@ -40,10 +40,10 @@ pkg_root = pjoin(here, name)
 setup_args = dict(
     name            = name,
     version         = '0.0.1',
-    py_modules      = ['rootkernel','rootkernelutils'],
+    py_modules      = ['rootkernel','rootkernelutils','rootkernelmagics'],
     scripts         = glob(pjoin('scripts', '*')),
-    description     = "ROOT Kernel for Jupyter",
-    author          = 'Omar Zapata',
+    description     = "ROOT/C++ Kernel for Jupyter",
+    author          = 'Omar Zapata, Danilo Piparo, Enric Tejedor',
     author_email    = 'Omar.Zapata@cern.ch',
     url             = 'https://github.com/oproject/rootkernel',
     license         = 'BSD',

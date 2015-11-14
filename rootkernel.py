@@ -13,7 +13,6 @@ try:
 except Exception as e:
     pass
 
-
 #ROOT related imports
 try:
     import ROOT
@@ -26,18 +25,18 @@ try:
     from ROOTaaS.iPyROOT.cppcompleter import CppCompleter
 except ImportError:
     raise ConfigError("Error: ROOTaaS not found")
-     
-
 
 import IPython
 
 try:
-    from metakernel import MetaKernel
+    from metakernel import MetaKernel, Parser
     from metakernel.display import clear_output, display, HTML
 except ImportError:
     raise ConfigError("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
 from rootkernelutils import StreamCapture, CanvasDrawer
+from rootkernelmagics import CppMagics
+     
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
 
@@ -64,6 +63,9 @@ class ROOTKernel(MetaKernel):
         utils.enableJSVisDebug()
         utils.setStyle()
         utils.enhanceROOTModule()
+        self.register_magics(CppMagics)
+        self.parser = Parser(self.identifier_regex, self.func_call_regex,
+                             self.magic_prefixes, self.help_suffix)
         self._stderr = StreamCapture(sys.stderr)
         self._stdout = StreamCapture(sys.stdout)
         self.completer = CppCompleter()
@@ -72,9 +74,19 @@ class ROOTKernel(MetaKernel):
     def get_completions(self, info):
         if _debug :Debug(info)
         return self.completer._completeImpl(info['code'])
-      
-    def do_execute(self, code, silent, store_history=True, user_expressions=None,
-                   allow_stdin=False):        
+    
+    #def do_execute(self, code, silent, store_history=True, user_expressions=None, allow_stdin=False):      
+    def do_execute_direct(self, code, silent=False):
+        
+        if not code.strip():
+            self.resp = {
+                'status': 'ok',
+                'execution_count': self.execution_count,
+                'payload': [],
+                'user_expressions': {},
+            }
+            return
+
         status = 'ok'
         traceback = None
         std_out=""
@@ -98,6 +110,7 @@ class ROOTKernel(MetaKernel):
                                else:
                                     display(self.drawer.pngImg())
                                canvas.ResetDrawn()
+        
             
         except KeyboardInterrupt:
             self.interpreter.gROOT.SetInterrupt()
