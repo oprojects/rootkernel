@@ -33,7 +33,7 @@ class DocMagics(Magic):
         '-n', '--namespace', action='store', help='Display help of given namespace'
     )            
     def line_doc(self, *args,**kwargs):
-        '''Executes the content of the cell as C++ code.'''
+        '''Executes the search of documentation for classes'''
         self.cell_help(args,kwargs)
         
 def register_magics(kernel):
