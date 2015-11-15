@@ -20,7 +20,8 @@ class CppMagics(Magic):
                  utils.declareCppCode(self.code)
              else:
                  utils.processCppCode(self.code)
-        self.code = ''
+        #self.code = ''
+        self.evaluate = False
         
     @option(
         '-a', '--aclic', action='store', default="default", help='Compile code with ACLiC.'
