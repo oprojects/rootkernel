@@ -11,7 +11,7 @@ class DocMagics(Magic):
         '-r', '--root', action='store', help='Display gui to show ROOT file'
     )            
     def cell_file(self,*args,**kwargs):
-        '''Executes JSROOT Guy to see ROOT files'''
+        '''Executes JSROOT Gui to see ROOT files'''
         if kwargs["root"]:
            htmlcode = "<script type='text/javascript' src='https://root.cern.ch/js/dev/scripts/JSRootCore.js?gui'></script>"
            #htmlcode += "<div id='simpleGUI' files='"+kwargs["root"]+"' path=''>loading files ... </div>"
