@@ -26,11 +26,13 @@ extern "C"
 
 //class to capture stderr/stdout 
 //also return the status of the execution
+//NOTE: create a system to flush current pipe in a fork
 class ROOTDMSaaSExecutorHandler
 {
 private:
   bool capturing;
-  static const unsigned int MAX_LEN=40;
+  static const unsigned int MAX_LEN=100;
+  long MAX_PIPE_SIZE=1048575;
   Bool_t fStatus=kFALSE;    
   
   //this values are to capture stdout, stderr
@@ -44,15 +46,19 @@ private:
 
 public:
   ROOTDMSaaSExecutorHandler(){
-    capturing=false;  
+    capturing=false;
+    std::ios::sync_with_stdio();
+    setvbuf( stdout, NULL, _IONBF, 0 );// absolutely needed(flush not needed ;))
+    setvbuf( stderr, NULL, _IONBF, 0 );// absolutely needed
   }        
   void InitCapture()
   {
     if(!capturing)
     {
+      fflush( stdout );
       /* save stdout/stderr for display later */
       saved_stdout = dup(STDOUT_FILENO);  
-      saved_stderr = dup(STDERR_FILENO);  
+//       saved_stderr = dup(STDERR_FILENO);  
       if( pipe(stdout_pipe) != 0 ) {          /* make a pipe for stdout*/
         return;
       }
@@ -63,10 +69,12 @@ public:
       long flags_stdout = fcntl(stdout_pipe[0], F_GETFL); 
       flags_stdout |= O_NONBLOCK; 
       fcntl(stdout_pipe[0], F_SETFL, flags_stdout);
+      fcntl(stdout_pipe[0], F_SETPIPE_SZ, MAX_PIPE_SIZE);//setting pipe size
       
       long flags_stderr = fcntl(stderr_pipe[0], F_GETFL); 
       flags_stderr |= O_NONBLOCK; 
       fcntl(stderr_pipe[0], F_SETFL, flags_stderr);
+      fcntl(stderr_pipe[0], F_SETPIPE_SZ, MAX_PIPE_SIZE);//setting pipe size
       
       dup2(stdout_pipe[1], STDOUT_FILENO);   /* redirect stdout to the pipe */
       close(stdout_pipe[1]);
@@ -84,23 +92,21 @@ public:
     if(capturing)
     {
       int buf_readed;
-      
+      char ch;
       while(true)/* read from pipe into buffer */
       {
-        fflush(stdout);
-        buf_readed = read(stdout_pipe[0], buffer, MAX_LEN);
-        if(buf_readed<=0) break;
-        for(int i=0;i<buf_readed;i++) stdoutpipe += buffer[i];
-        memset(buffer,0,MAX_LEN);
+//         fflush(stdout);
+        buf_readed = read(stdout_pipe[0], &ch, 1);
+        if(buf_readed==1) stdoutpipe += ch;
+        else break;
       }
       
       while(true)/* read from pipe into buffer */
       {
-        fflush(stderr);
-        buf_readed = read(stderr_pipe[0], buffer, MAX_LEN);
-        if(buf_readed<=0) break;
-        for(int i=0;i<buf_readed;i++) stderrpipe += buffer[i];
-        memset(buffer,0,MAX_LEN);
+//         fflush(stderr);
+        buf_readed = read(stderr_pipe[0], &ch, 1);
+        if(buf_readed==1) stderrpipe += ch;
+        else break;
       }
       
       
@@ -164,8 +170,9 @@ void ROOTDMaaS()
   ROOTDMSaaSExecutorHandler io;
   io.clear();
   io.InitCapture();
-  ROOTDMaaSExecutor("int *a=0;");
-  ROOTDMaaSExecutor("a[10]=0;");
+//   ROOTDMaaSExecutor("int *a=0;");
+//   ROOTDMaaSExecutor("a[10]=0;");
+  ROOTDMaaSExecutor("for(int i=0;i<100000;i++) std::cout<<i<<std::endl;");
   io.EndCapture();
   std::cout<<"--------------STDOUT--------------------\n";
   std::cout<<io.getStdout();

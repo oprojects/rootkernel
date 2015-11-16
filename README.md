@@ -13,10 +13,9 @@ ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
 
 
 ## Limitations
-* It dont support declare functions in cell, but classes is supported if methods are declare inside
+* It dont support declare functions and classes without magic %%cpp
 * The plot just work if the method Draw is called by TCanvas's object
-* It dont c++ tracebacks 
-* Magics not implemented yet.
+* The output stdout/stderr just can buffer 1Mb 
 
 ## Install
 
