@@ -6,6 +6,11 @@ ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
 * C++  highlighting
 * Tab-completion
 * JSROOT implemented
+* ipython magics supported(shell,python,html,etc..)
+* I/O capture for segfault and in general
+* new added %%doc to show documentation for classes
+* magics %%cpp to declare functions and classes in cells or tu compile with ACLiC
+
 
 ## Limitations
 * It dont support declare functions in cell, but classes is supported if methods are declare inside
