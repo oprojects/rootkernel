@@ -9,6 +9,20 @@ import IPython
 
 from ROOTDMaaS.io import Handler
 
+class StreamCapture(InternalStreamCapture):
+    def __init__(self,stream):
+        InternalStreamCapture.__init__(self,stream)
+        
+    def post_execute(self):
+        out = ''
+        if self.pipe_out:
+            while self.more_data():
+                out += os.read(self.pipe_out, 1024)
+
+        self.flush()
+        self.sysStreamFile.write(out) # important to print the value printing output
+        return out
+
 _ioHandler = None
 def GetIOHandler():
     global _ioHandler
@@ -34,20 +48,6 @@ def GetDeclarer():
         from ROOT import ROOTDMaaSDeclarer
         _Executor = ROOTDMaaSDeclarer
     return _Declarer
-
-class StreamCapture(InternalStreamCapture):
-    def __init__(self,stream):
-        InternalStreamCapture.__init__(self,stream)
-        
-    def post_execute(self):
-        out = ''
-        if self.pipe_out:
-            while self.more_data():
-                out += os.read(self.pipe_out, 1024)
-
-        self.flush()
-        self.sysStreamFile.write(out) # important to print the value printing output
-        return out
       
 class CanvasDrawer(InternalCanvasDrawer):
     def __init__(self, thePad):

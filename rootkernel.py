@@ -69,8 +69,6 @@ class ROOTKernel(MetaKernel):
         self.Executor  = GetExecutor()
         self.parser = Parser(self.identifier_regex, self.func_call_regex,
                              self.magic_prefixes, self.help_suffix)
-        #self._stderr = StreamCapture(sys.stderr)
-        #self._stdout = StreamCapture(sys.stdout)
         self.completer = CppCompleter()
         self.completer.activate()
 
@@ -94,13 +92,8 @@ class ROOTKernel(MetaKernel):
             root_status = self.Executor(str(code))
             self.ioHandler.EndCapture()
             
-            #std_out = self._stdout.post_execute()
-            #if not _debug : std_err = self._stderr.post_execute()
-            
             std_out = self.ioHandler.getStdout()
-            print(std_out)
             std_err = self.ioHandler.getStderr()
-            print(std_err)
             
             if ROOT.gPad:
                  if ROOT.gPad.IsDrawn():
@@ -118,12 +111,13 @@ class ROOTKernel(MetaKernel):
         except KeyboardInterrupt:
             self.interpreter.gROOT.SetInterrupt()
             status = 'interrupted'
-            #std_out = self._stdout.post_execute();
-            #if not _debug : std_err = self._stderr.post_execute();
+            self.ioHandler.EndCapture()
+            std_out = self.ioHandler.getStdout()
+            std_err = self.ioHandler.getStderr()
         if not silent:
             ## Send output on stdout
-            #stream_content_stdout = {'name': 'stdout', 'text': stdout}
-            #self.send_response(self.iopub_socket, 'stream', stream_content_stdout)
+            stream_content_stdout = {'name': 'stdout', 'text': std_out}
+            self.send_response(self.iopub_socket, 'stream', stream_content_stdout)
             if std_err != "":
                 stream_content_stderr = {'name': 'stderr', 'text': std_err}
                 self.send_response(self.iopub_socket, 'stream', stream_content_stderr)
