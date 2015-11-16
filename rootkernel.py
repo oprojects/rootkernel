@@ -34,13 +34,13 @@ try:
 except ImportError:
     raise ConfigError("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
-from rootkernelutils import StreamCapture, CanvasDrawer
+from rootkernelutils import GetIOHandler, GetExecutor, CanvasDrawer
 from rootkernelmagics import MagicLoader
      
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
 
-_debug = False
+_debug = True
 
 def Debug(msg):
      print('out: %r' % msg, file=sys.__stderr__)
@@ -65,11 +65,12 @@ class ROOTKernel(MetaKernel):
         utils.enhanceROOTModule()
         self.magicloader=MagicLoader(self)
         
-        #self.register_magics(CppMagics)
+        self.ioHandler = GetIOHandler()
+        self.Executor  = GetExecutor()
         self.parser = Parser(self.identifier_regex, self.func_call_regex,
                              self.magic_prefixes, self.help_suffix)
-        self._stderr = StreamCapture(sys.stderr)
-        self._stdout = StreamCapture(sys.stdout)
+        #self._stderr = StreamCapture(sys.stderr)
+        #self._stdout = StreamCapture(sys.stdout)
         self.completer = CppCompleter()
         self.completer.activate()
 
@@ -88,13 +89,19 @@ class ROOTKernel(MetaKernel):
         std_out=""
         std_err=""
         try:
-            self._stdout.pre_execute();
-            if not _debug : self._stderr.pre_execute();
-            root_status = ROOT.gROOT.ProcessLine(code)
-            self._stdout.flush()
-            if not _debug : self._stderr.flush()
-            std_out = self._stdout.post_execute()
-            if not _debug : std_err = self._stderr.post_execute()
+            self.ioHandler.clear()
+            self.ioHandler.InitCapture()
+            root_status = self.Executor(str(code))
+            self.ioHandler.EndCapture()
+            
+            #std_out = self._stdout.post_execute()
+            #if not _debug : std_err = self._stderr.post_execute()
+            
+            std_out = self.ioHandler.getStdout()
+            print(std_out)
+            std_err = self.ioHandler.getStderr()
+            print(std_err)
+            
             if ROOT.gPad:
                  if ROOT.gPad.IsDrawn():
                      canvaslist = ROOT.gROOT.GetListOfCanvases()
@@ -111,8 +118,8 @@ class ROOTKernel(MetaKernel):
         except KeyboardInterrupt:
             self.interpreter.gROOT.SetInterrupt()
             status = 'interrupted'
-            std_out = self._stdout.post_execute();
-            if not _debug : std_err = self._stderr.post_execute();
+            #std_out = self._stdout.post_execute();
+            #if not _debug : std_err = self._stderr.post_execute();
         if not silent:
             ## Send output on stdout
             #stream_content_stdout = {'name': 'stdout', 'text': stdout}
@@ -141,7 +148,7 @@ class ROOTKernel(MetaKernel):
 	    pass
         else:
             raise ValueError("Invalid status: %r" % status)
-        return reply
+        #return reply
 
 def main():
     """launch a root kernel"""

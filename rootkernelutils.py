@@ -7,6 +7,34 @@ from ROOTaaS.iPyROOT.utils import _jsCanvasWidth, _jsCanvasHeight, _jsROOTSource
 
 import IPython
 
+from ROOTDMaaS.io import Handler
+
+_ioHandler = None
+def GetIOHandler():
+    global _ioHandler
+    if not _ioHandler:
+        Handler.LoadHandlers()
+        from ROOT import ROOTDMSaaSExecutorHandler
+        _ioHandler = ROOTDMSaaSExecutorHandler()
+    return _ioHandler
+    
+_Executor = None
+_Declarer = None
+
+def GetExecutor():
+    global _Executor
+    if not _Executor:
+        from ROOT import ROOTDMaaSExecutor
+        _Executor = ROOTDMaaSExecutor
+    return _Executor
+
+def GetDeclarer():
+    global _Declarer
+    if not _Declarer:
+        from ROOT import ROOTDMaaSDeclarer
+        _Executor = ROOTDMaaSDeclarer
+    return _Declarer
+
 class StreamCapture(InternalStreamCapture):
     def __init__(self,stream):
         InternalStreamCapture.__init__(self,stream)

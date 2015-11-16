@@ -39,7 +39,7 @@ pkg_root = pjoin(here, name)
 MAGICSPATH = "ROOTDMaaS/Magics/"
 
 ##reading ROOT modules and Magics
-root_modules = ['rootkernel','rootkernelutils','rootkernelmagics','ROOTDMaaS/__init__']
+root_modules = ['rootkernel','rootkernelutils','rootkernelmagics','ROOTDMaaS/__init__','ROOTDMaaS/io/Handler','ROOTDMaaS/io/__init__']
 os.chdir(MAGICSPATH)
 for file in glob("*.py"):
     root_modules.append(MAGICSPATH+file.replace(".py",""))
