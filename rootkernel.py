@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import sys, os, select, tempfile
 
+
 #trying to find ROOT lib path to PYTHONPATH 
 #NOTE: required for hupyterhub              
 try:
@@ -17,14 +18,14 @@ except Exception as e:
 try:
     import ROOT
 except ImportError:
-    raise ConfigError("Error: PyROOT not found")
+    raise Exception("Error: PyROOT not found")
 
 
 try:
     from ROOTaaS.iPyROOT import utils 
     from ROOTaaS.iPyROOT.cppcompleter import CppCompleter
 except ImportError:
-    raise ConfigError("Error: ROOTaaS not found")
+    raise Exception("Error: ROOTaaS not found")
 
 import IPython
 
@@ -32,7 +33,7 @@ try:
     from metakernel import MetaKernel, Parser
     from metakernel.display import clear_output, display, HTML
 except ImportError:
-    raise ConfigError("Error: package metakernel not found.(install it running 'pip install metakernel')")
+    raise Exception("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
 from rootkernelutils import GetIOHandler, GetExecutor, CanvasDrawer
 from rootkernelmagics import MagicLoader
@@ -99,6 +100,7 @@ class ROOTKernel(MetaKernel):
                  if ROOT.gPad.IsDrawn():
                      canvaslist = ROOT.gROOT.GetListOfCanvases()
                      for canvas in canvaslist:
+                          canvas.Draw()
                           if canvas.IsDrawn():
                                self.drawer = CanvasDrawer(canvas)
                                if self.drawer._canJsDisplay():
@@ -139,7 +141,7 @@ class ROOTKernel(MetaKernel):
             self.send_response(self.iopub_socket, 'error', err)
             reply.update(err)
         elif status == 'ok':
-	    pass
+            pass
         else:
             raise ValueError("Invalid status: %r" % status)
         #return reply
