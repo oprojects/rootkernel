@@ -35,7 +35,7 @@ try:
 except ImportError:
     raise Exception("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
-from rootkernelutils import GetIOHandler, GetExecutor, CanvasDrawer
+from rootkernelutils import GetIOHandler, GetExecutor,GetDeclarer, CanvasDrawer
 from rootkernelmagics import MagicLoader
      
 # We want iPython to take over the graphics
@@ -68,6 +68,7 @@ class ROOTKernel(MetaKernel):
         
         self.ioHandler = GetIOHandler()
         self.Executor  = GetExecutor()
+        self.Declarer  = GetDeclarer()#required for %%cpp -d magic
         self.parser = Parser(self.identifier_regex, self.func_call_regex,
                              self.magic_prefixes, self.help_suffix)
         self.completer = CppCompleter()

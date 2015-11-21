@@ -46,7 +46,7 @@ def GetDeclarer():
     global _Declarer
     if not _Declarer:
         from ROOT import ROOTDMaaSDeclarer
-        _Executor = ROOTDMaaSDeclarer
+        _Declarer = ROOTDMaaSDeclarer
     return _Declarer
       
 class CanvasDrawer(InternalCanvasDrawer):
