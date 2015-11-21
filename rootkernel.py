@@ -63,7 +63,6 @@ class ROOTKernel(MetaKernel):
         utils.enableJSVis()
         utils.enableJSVisDebug()
         utils.setStyle()
-        #utils.enhanceROOTModule()
         self.magicloader=MagicLoader(self)
         
         self.ioHandler = GetIOHandler()
@@ -100,7 +99,6 @@ class ROOTKernel(MetaKernel):
             canvaslist = ROOT.gROOT.GetListOfCanvases()
             if canvaslist:
                 for canvas in canvaslist:
-                    canvas.Draw()
                     if canvas.IsDrawn():
                         self.drawer = CanvasDrawer(canvas)
                         if self.drawer._canJsDisplay():
