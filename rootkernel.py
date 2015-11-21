@@ -63,7 +63,7 @@ class ROOTKernel(MetaKernel):
         utils.enableJSVis()
         utils.enableJSVisDebug()
         utils.setStyle()
-        utils.enhanceROOTModule()
+        #utils.enhanceROOTModule()
         self.magicloader=MagicLoader(self)
         
         self.ioHandler = GetIOHandler()
@@ -97,18 +97,17 @@ class ROOTKernel(MetaKernel):
             std_out = self.ioHandler.getStdout()
             std_err = self.ioHandler.getStderr()
             
-            if ROOT.gPad:
-                 if ROOT.gPad.IsDrawn():
-                     canvaslist = ROOT.gROOT.GetListOfCanvases()
-                     for canvas in canvaslist:
-                          canvas.Draw()
-                          if canvas.IsDrawn():
-                               self.drawer = CanvasDrawer(canvas)
-                               if self.drawer._canJsDisplay():
-                                    display(HTML(self.drawer.jsCode()))
-                               else:
-                                    display(self.drawer.pngImg())
-                               canvas.ResetDrawn()
+            canvaslist = ROOT.gROOT.GetListOfCanvases()
+            if canvaslist:
+                for canvas in canvaslist:
+                    canvas.Draw()
+                    if canvas.IsDrawn():
+                        self.drawer = CanvasDrawer(canvas)
+                        if self.drawer._canJsDisplay():
+                            self.Display(HTML(self.drawer.jsCode()))
+                        else:
+                            self.Display(self.drawer.pngImg())
+                        canvas.ResetDrawn()
         
             
         except KeyboardInterrupt:
