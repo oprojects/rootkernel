@@ -55,15 +55,14 @@ class ROOTKernel(MetaKernel):
                      'codemirror_mode': 'text/x-c++src',
                      'mimetype': ' text/x-c++src',
                      'file_extension': '.C'}
-    banner = "CERN's ROOT Kernel(ROOTaaS)"
+    banner = "CERN's ROOT Kernel(ROOTDMaaS) %s"%ROOT.gROOT.GetVersion()
     def __init__(self,**kwargs):
         
         MetaKernel.__init__(self,**kwargs)
         #JSROOT.enableJSVis()
         #JSROOT.enableJSVisDebug()
         #JSROOT.setStyle()
-        self.magicloader=MagicLoader(self)
-        
+        self.magicloader = MagicLoader(self)        
         self.ioHandler = GetIOHandler()
         self.Executor  = GetExecutor()
         self.Declarer  = GetDeclarer()#required for %%cpp -d magic
@@ -86,11 +85,11 @@ class ROOTKernel(MetaKernel):
         std_out=""
         std_err=""
         try:
-            
-            #self.ioHandler.clear()
-            #self.ioHandler.InitCapture()
+            Debug(code)            
+            self.ioHandler.clear()
+            self.ioHandler.InitCapture()
             root_status = self.Executor(str(code))
-            #self.ioHandler.EndCapture()
+            self.ioHandler.EndCapture()
             
             std_out = self.ioHandler.getStdout()
             std_err = self.ioHandler.getStderr()

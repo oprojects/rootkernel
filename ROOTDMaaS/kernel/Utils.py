@@ -41,8 +41,11 @@ class MagicLoader(object):
          for file in glob(magics_path):
               if file != magics_path.replace("*.py","__init__.py"):
                   module_path="ROOTDMaaS.magics."+file.split("/")[-1].replace(".py","")
-                  module= __builtin__.__import__(module_path, globals(), locals(), ['register_magics'], -1)
-                  module.register_magics(kernel)
+                  try:
+                      module= __builtin__.__import__(module_path, globals(), locals(), ['register_magics'], -1)
+                      module.register_magics(kernel)
+                  except ImportError:
+                      raise Exception("Error importing Magic: %s"%module_path)
 
 
 

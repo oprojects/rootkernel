@@ -1,6 +1,5 @@
-from ROOTaaS.iPyROOT import utils 
 from metakernel import Magic, option
-from metakernel.display import clear_output, display, HTML
+from metakernel.display import HTML
 
 import urllib2, re
 
@@ -19,22 +18,13 @@ class DocMagics(Magic):
         if kwargs["namespace"]:
            docurl='http://rootdoc.oproject.org/rootdoc/html/namespace'+kwargs["namespace"].replace(':','_1')+'.html'
            htmlcode="<iframe src='"+docurl+"' width='100%' height='400px' ></iframe>"
-           display(HTML(htmlcode))
+           self.kernel.Display(HTML(htmlcode))
         else:
            docurl='http://rootdoc.oproject.org/rootdoc/html/class'+kwargs["class"].replace(':','_1')+'.html'
            htmlcode="<iframe src='"+docurl+"' width='100%' height='400px' ></iframe>"
-           display(HTML(htmlcode))
+           self.kernel.Display(HTML(htmlcode))
         self.evaluate = False
         
-    @option(
-        '-c', '--class', action='store', help='Display help of given class'
-    )            
-    @option(
-        '-n', '--namespace', action='store', help='Display help of given namespace'
-    )            
-    def line_doc(self, *args,**kwargs):
-        '''Executes the search of documentation for classes'''
-        self.cell_help(args,kwargs)
         
 def register_magics(kernel):
     kernel.register_magics(DocMagics)
