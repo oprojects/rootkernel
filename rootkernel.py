@@ -22,21 +22,20 @@ except ImportError:
 
 
 try:
-    from ROOTaaS.iPyROOT import utils 
-    from ROOTaaS.iPyROOT.cppcompleter import CppCompleter
+    from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor,GetDeclarer, MagicLoader
+    from ROOTDMaaS.kernel.CppCompleter import CppCompleter
+    from ROOTDMaaS.js.JSROOT import CanvasDrawer
 except ImportError:
-    raise Exception("Error: ROOTaaS not found")
+    raise Exception("Error: ROOTDMaaS not found")
 
 import IPython
 
 try:
     from metakernel import MetaKernel, Parser
-    from metakernel.display import clear_output, display, HTML
+    from metakernel.display import HTML
 except ImportError:
     raise Exception("Error: package metakernel not found.(install it running 'pip install metakernel')")
 
-from rootkernelutils import GetIOHandler, GetExecutor,GetDeclarer, CanvasDrawer
-from rootkernelmagics import MagicLoader
      
 # We want iPython to take over the graphics
 ROOT.gROOT.SetBatch()
@@ -60,9 +59,9 @@ class ROOTKernel(MetaKernel):
     def __init__(self,**kwargs):
         
         MetaKernel.__init__(self,**kwargs)
-        utils.enableJSVis()
-        utils.enableJSVisDebug()
-        utils.setStyle()
+        #JSROOT.enableJSVis()
+        #JSROOT.enableJSVisDebug()
+        #JSROOT.setStyle()
         self.magicloader=MagicLoader(self)
         
         self.ioHandler = GetIOHandler()
@@ -77,7 +76,6 @@ class ROOTKernel(MetaKernel):
         if _debug :Debug(info)
         return self.completer._completeImpl(info['code'])
     
-    #def do_execute(self, code, silent, store_history=True, user_expressions=None, allow_stdin=False):      
     def do_execute_direct(self, code, silent=False):
         
         if not code.strip():
@@ -88,10 +86,11 @@ class ROOTKernel(MetaKernel):
         std_out=""
         std_err=""
         try:
-            self.ioHandler.clear()
-            self.ioHandler.InitCapture()
+            
+            #self.ioHandler.clear()
+            #self.ioHandler.InitCapture()
             root_status = self.Executor(str(code))
-            self.ioHandler.EndCapture()
+            #self.ioHandler.EndCapture()
             
             std_out = self.ioHandler.getStdout()
             std_err = self.ioHandler.getStderr()
@@ -102,9 +101,9 @@ class ROOTKernel(MetaKernel):
                     if canvas.IsDrawn():
                         self.drawer = CanvasDrawer(canvas)
                         if self.drawer._canJsDisplay():
-                            self.Display(HTML(self.drawer.jsCode()))
+                            self.Display(HTML(self.drawer._jsDisplay()))
                         else:
-                            self.Display(self.drawer.pngImg())
+                            self.Display(self.drawer._pngDisplay())
                         canvas.ResetDrawn()
         
             

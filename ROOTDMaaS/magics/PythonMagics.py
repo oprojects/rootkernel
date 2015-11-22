@@ -1,27 +1,20 @@
-from metakernel import Magic, option
-
-#from __builtin__ import eval
-
 import ROOT
 from ROOT import TPython
+from ROOTDMaaS.js.JSROOT import CanvasDrawer
 
-#from rootkernelutils import GetIOHandler,GetExecutor, CanvasDrawer
-
-from rootkernelutils import GetIOHandler,GetExecutor, CanvasDrawer
-from metakernel.display import clear_output, display, HTML
+from metakernel.display import HTML
+from metakernel import Magic, option
 
 class PythonMagics(Magic):
     def __init__(self, kernel):
         super(PythonMagics, self).__init__(kernel)
-        #self.ioHandler = GetIOHandler()
-        #self.Executor = GetExecutor()
                 
     def cell_python(self,args):
         '''Executes the content of the cell as python code.'''
         if self.code.strip():
             self.kernel.ioHandler.clear()
             self.kernel.ioHandler.InitCapture()
-            TPython.Exec(self.code)
+            TPython.Exec(str(self.code))
             self.kernel.ioHandler.EndCapture()
             std_out = self.kernel.ioHandler.getStdout()
             std_err = self.kernel.ioHandler.getStderr()
@@ -36,16 +29,16 @@ class PythonMagics(Magic):
                     if canvas.IsDrawn():
                         self.drawer = CanvasDrawer(canvas)
                         if self.drawer._canJsDisplay():
-                            self.kernel.Display(HTML(self.drawer.jsCode()))
+                            self.kernel.Display(HTML(self.drawer._jsDisplay()))
                         else:
-                            self.kernel.Display(self.drawer.pngImg())
+                            self.kernel.Display(self.drawer._pngDisplay())
                         canvas.ResetDrawn()
         #self.code = ''
         self.evaluate = False
-
-    def get_completions(self, info):
-        python_magic = self.kernel.line_magics['python']
-        return python_magic.get_completions(info)        
+#NOTE:python tab completions is not working into the cell
+    #def get_completions(self, info):
+        #python_magic = self.kernel.line_magics['python']
+        #return python_magic.get_completions(info)        
 
 def register_magics(kernel):
     kernel.register_magics(PythonMagics)

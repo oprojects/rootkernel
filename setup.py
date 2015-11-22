@@ -36,10 +36,12 @@ pjoin = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
 pkg_root = pjoin(here, name)
 
-MAGICSPATH = "ROOTDMaaS/Magics/"
+MAGICSPATH = "ROOTDMaaS/magics/"
 
 ##reading ROOT modules and Magics
-root_modules = ['rootkernel','rootkernelutils','rootkernelmagics','ROOTDMaaS/__init__','ROOTDMaaS/io/Handler','ROOTDMaaS/io/__init__']
+root_modules =  ['rootkernel','ROOTDMaaS/io/Handler','ROOTDMaaS/js/JSROOT']
+root_modules += ['ROOTDMaaS/kernel/CppCompleter','ROOTDMaaS/kernel/Utils']
+root_modules += ['ROOTDMaaS/__init__','ROOTDMaaS/io/__init__','ROOTDMaaS/js/__init__','ROOTDMaaS/kernel/__init__']
 os.chdir(MAGICSPATH)
 for file in glob("*.py"):
     root_modules.append(MAGICSPATH+file.replace(".py",""))
@@ -53,7 +55,7 @@ setup_args = dict(
     scripts         = glob(pjoin('scripts', '*')),
     description     = "ROOT/C++ Kernel for Jupyter",
     author          = 'Omar Zapata, Danilo Piparo, Enric Tejedor',
-    author_email    = 'Omar.Zapata@cern.ch',
+    author_email    = 'Omar.Zapata@cern.ch,Danilo.Piparo@cern.ch,enric.tejedor.saavedra@cern.ch',
     url             = 'https://github.com/oproject/rootkernel',
     license         = 'BSD',
     platforms       = "Linux, Mac OS X",
