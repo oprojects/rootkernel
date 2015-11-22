@@ -4,7 +4,6 @@ from ROOTDMaaS.js.JSROOT import CanvasDrawer
 from metakernel.display import HTML
 from metakernel.magics.python_magic import  PythonMagic
 
-
 class PythonMagics(PythonMagic):
     def __init__(self, kernel):
         super(PythonMagics, self).__init__(kernel)

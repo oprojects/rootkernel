@@ -2,6 +2,8 @@ from metakernel import Magic, option
 
 import sys
 
+from ROOTaaS.iPyROOT import utils #require for ACLiC
+
 from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor,GetDeclarer
 
 #NOTE:actually ROOTaaS is not capturing the error on %%cpp -d if the function is wrong 

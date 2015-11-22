@@ -24,7 +24,7 @@ except ImportError:
 try:
     from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor,GetDeclarer, MagicLoader
     from ROOTDMaaS.kernel.CppCompleter import CppCompleter
-    from ROOTDMaaS.js.JSROOT import CanvasDrawer
+    from ROOTDMaaS.js import JSROOT 
 except ImportError:
     raise Exception("Error: ROOTDMaaS not found")
 
@@ -62,7 +62,8 @@ class ROOTKernel(MetaKernel):
         MetaKernel.__init__(self,**kwargs)
         #JSROOT.enableJSVis()
         #JSROOT.enableJSVisDebug()
-        #JSROOT.setStyle()
+        JSROOT.setStyle()
+        JSROOT.LoadDrawer()
         self.magicloader = MagicLoader(self)        
         self.ioHandler = GetIOHandler()
         self.Executor  = GetExecutor()
@@ -100,11 +101,11 @@ class ROOTKernel(MetaKernel):
             if canvaslist:
                 for canvas in canvaslist:
                     if canvas.IsDrawn():
-                        self.drawer = CanvasDrawer(canvas)
+                        self.drawer = JSROOT.CanvasDrawer(canvas)
                         if self.drawer._canJsDisplay():
-                            self.Display(HTML(self.drawer._jsDisplay()))
+                            self.Display(HTML(self.drawer.JsCode()))
                         else:
-                            self.Display(self.drawer._pngDisplay())
+                            self.Display(self.drawer.PngImage())
                         canvas.ResetDrawn()
         
             

@@ -4,6 +4,7 @@ import fnmatch
 from contextlib import contextmanager
 
 import IPython.display
+from metakernel.display import display,HTML
 import ROOT
 
 _jsDefaultHighlight = """
@@ -135,9 +136,34 @@ class CanvasDrawer(object):
                                     jsDivId = divId)
 
         # display is the key point of this hook
+        display(HTML(thisJsCode))
+
+    def JsCode(self):
+        # Workaround to have ConvertToJSON work
+        json = ROOT.TBufferJSON.ConvertToJSON(self.canvas, 3)
+        #print "JSON:",json
+
+        # Here we could optimise the string manipulation
+        divId = 'root_plot_' + str(self._getUID())
+        thisJsCode = _jsCode.format(jsCanvasWidth = _jsCanvasWidth,
+                                    jsCanvasHeight = _jsCanvasHeight,
+                                    jsROOTSourceDir = _jsROOTSourceDir,
+                                    jsonContent=json.Data(),
+                                    jsDrawOptions="",
+                                    jsDivId = divId)
+
+        # display is the key point of this hook
         return thisJsCode
 
+
     def _pngDisplay(self):
+        ofile = tempfile.NamedTemporaryFile(suffix=".png")
+        with _setIgnoreLevel(ROOT.kError):
+            self.canvas.SaveAs(ofile.name)
+        img = IPython.display.Image(filename=ofile.name, format='png', embed=True)
+        display(img)
+
+    def PngImage(self):
         ofile = tempfile.NamedTemporaryFile(suffix=".png")
         with _setIgnoreLevel(ROOT.kError):
             self.canvas.SaveAs(ofile.name)
@@ -159,5 +185,27 @@ class CanvasDrawer(object):
         self._display()
         return 0
 
+def _PyDraw(thePad):
+   """
+   Invoke the draw function and intercept the graphics
+   """
+   drawer = CanvasDrawer(thePad)
+   drawer.Draw()
 
-
+def setStyle():
+    style=ROOT.gStyle
+    style.SetFuncWidth(3)
+    style.SetHistLineWidth(3)
+    style.SetMarkerStyle(8)
+    style.SetMarkerSize(.5)
+    style.SetMarkerColor(ROOT.kBlue)
+    style.SetPalette(57)
+    
+def LoadDrawer():
+    setStyle()
+    ROOT.enableJSVis = enableJSVis
+    ROOT.disableJSVis = disableJSVis
+    ROOT.enableJSVisDebug = enableJSVisDebug
+    ROOT.disableJSVisDebug = disableJSVisDebug
+    ROOT.TCanvas.DrawCpp = ROOT.TCanvas.Draw
+    ROOT.TCanvas.Draw = _PyDraw
