@@ -17,6 +17,7 @@ ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
 * The plot just work if the method Draw is called by TCanvas's object
 * The output stdout/stderr just can buffer 1Mb 
 
+
 ## Install
 
 Prerequsites
@@ -40,3 +41,12 @@ To install the kernel:
 or for IPython/Jupyter < 4:
 
     ipython kernelspec install root
+
+##  Copyright (c) 2015, ROOT Team.
+  Authors: Omar Zapata <Omar.Zapata@cern.ch> oproject.org
+           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
+           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
+  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
+  Distributed under the terms of the Modified BSD License.
+
+  The full license is in the file COPYING.rst, distributed with this software.

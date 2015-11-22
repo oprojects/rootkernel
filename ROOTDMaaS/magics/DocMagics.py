@@ -1,3 +1,14 @@
+# -*- coding:utf-8 -*-
+#-----------------------------------------------------------------------------
+#  Copyright (c) 2015, ROOT Team.
+#  Authors: Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
+#           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
+#           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
+#  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
+#  Distributed under the terms of the Modified BSD License.
+#
+#  The full license is in the file COPYING.rst, distributed with this software.
+#-----------------------------------------------------------------------------
 from metakernel import Magic, option
 from metakernel.display import HTML
 
