@@ -140,7 +140,7 @@ class CanvasDrawer(object):
     def _pngDisplay(self):
         ofile = tempfile.NamedTemporaryFile(suffix=".png")
         with _setIgnoreLevel(ROOT.kError):
-            self.thePad.SaveAs(ofile.name)
+            self.canvas.SaveAs(ofile.name)
         img = IPython.display.Image(filename=ofile.name, format='png', embed=True)
         return img
 

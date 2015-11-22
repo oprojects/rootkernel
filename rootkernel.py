@@ -56,6 +56,7 @@ class ROOTKernel(MetaKernel):
                      'mimetype': ' text/x-c++src',
                      'file_extension': '.C'}
     banner = "CERN's ROOT Kernel(ROOTDMaaS) %s"%ROOT.gROOT.GetVersion()
+    
     def __init__(self,**kwargs):
         
         MetaKernel.__init__(self,**kwargs)
@@ -70,11 +71,12 @@ class ROOTKernel(MetaKernel):
                              self.magic_prefixes, self.help_suffix)
         self.completer = CppCompleter()
         self.completer.activate()
+        
 
     def get_completions(self, info):
         if _debug :Debug(info)
         return self.completer._completeImpl(info['code'])
-    
+        
     def do_execute_direct(self, code, silent=False):
         
         if not code.strip():
