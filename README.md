@@ -1,16 +1,18 @@
 # ROOT Kernel
 
-ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
+ROOT(C++) Jupyter Kernel for the project  ROOTDMaaS (ROOT Data Mining as a Service)
 
 ## Features
 * C++  highlighting
-* Tab-completion
+* C++ Tab-completion
+* Python(Magic Cell)  highlighting
+* Python(Magic Cell) Tab-completion (using jedi)
 * JSROOT implemented
 * ipython magics supported(shell,python,html,etc..)
 * I/O capture for segfault and in general
-* new added %%doc to show documentation for classes
-* magics %%cpp to declare functions and classes in cells or tu compile with ACLiC
-
+* new magic added %%doc to show documentation for classes
+* magics %%cpp to declare functions and classes in cells or to compile with ACLiC
+* Tested under Gnu/Linux and MacOSX Yisemite
 
 ## Limitations
 * It dont support declare functions and classes without magic %%cpp
@@ -44,7 +46,7 @@ or for IPython/Jupyter < 4:
     ipython kernelspec install root
 
 ##  Copyright (c) 2015, ROOT Team.
-  Authors: Omar Zapata <Omar.Zapata@cern.ch> oproject.org
+  Authors: Omar Zapata <Omar.Zapata@cern.ch> OProject
            Danilo Piparo <Danilo.Piparo@cern.ch> CERN
            Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
   website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
