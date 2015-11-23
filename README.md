@@ -15,7 +15,7 @@ ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
 ## Limitations
 * It dont support declare functions and classes without magic %%cpp
 * The plot just work if the method Draw is called by TCanvas's object
-* The output stdout/stderr just can buffer 1Mb 
+* The output stdout/stderr just can buffer 1Mb(PIPE buffer) 
 
 
 ## Install
@@ -23,6 +23,7 @@ ROOT(C++) Kernel for Jupyter using the ROOTDMaaS (ROOT Data Mining as a Service)
 Prerequsites
 
     pip install metakernel
+    pip install jedi
     git clone https://github.com/oprojects/rootkernel.git
     cd rootkernel.git
     
@@ -46,7 +47,6 @@ or for IPython/Jupyter < 4:
   Authors: Omar Zapata <Omar.Zapata@cern.ch> oproject.org
            Danilo Piparo <Danilo.Piparo@cern.ch> CERN
            Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
-  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
+  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
   Distributed under the terms of the Modified BSD License.
 
-  The full license is in the file COPYING.rst, distributed with this software.

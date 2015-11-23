@@ -4,8 +4,8 @@
 #  
 #  Authors: Danilo Piparo <Danilo.Piparo@cern.ch> CERN
 #           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
-#           Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
-#  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
+#  Modified by: Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
+#  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
 #  Distributed under the terms of the Modified BSD License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.

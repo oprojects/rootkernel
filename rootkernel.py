@@ -3,9 +3,7 @@
 #-----------------------------------------------------------------------------
 #  Copyright (c) 2015, ROOT Team.
 #  Authors: Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
-#           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
-#           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
-#  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
+#  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
 #  Distributed under the terms of the Modified BSD License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.
@@ -24,6 +22,9 @@ try:
     ROOT_PYTHON_PATH.close()
 except Exception as e:
     pass
+#setting up PYTHONPATH
+os.environ['PYTHONPATH'] = os.environ['PYTHONPATH']+":"+os.path.dirname(__file__)
+
 
 #ROOT related imports
 try:

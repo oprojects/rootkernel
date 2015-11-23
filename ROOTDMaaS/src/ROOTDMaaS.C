@@ -1,7 +1,7 @@
 // @(#)rootkernel$Id$
-// Authors: Omar Zapata, Danilo Piparo, Enric Tejedor 2015 ROOTDMaaS project
+// Authors: Omar Zapata 2015 ROOT+Jupyter+Kernel project
 // Email: Omar.Zapata@cern.ch
-// Website: http://oproject.org/ROOTDMaaS
+// Website: http://oproject.org/ROOT+Jupyter+Kernel
 
 #include<TRint.h>
 #include<TApplication.h>
