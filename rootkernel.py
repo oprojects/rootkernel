@@ -33,7 +33,7 @@ except ImportError:
 
 
 try:
-    from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor,GetDeclarer, MagicLoader
+    from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor, GetDeclarer, ACLiC, MagicLoader
     from ROOTDMaaS.kernel.CppCompleter import CppCompleter
     from ROOTDMaaS.js import JSROOT 
 except ImportError:
@@ -79,6 +79,7 @@ class ROOTKernel(MetaKernel):
         self.ioHandler = GetIOHandler()
         self.Executor  = GetExecutor()
         self.Declarer  = GetDeclarer()#required for %%cpp -d magic
+        self.ACLiC     = ACLiC
         self.parser = Parser(self.identifier_regex, self.func_call_regex,
                              self.magic_prefixes, self.help_suffix)
         self.completer = CppCompleter()

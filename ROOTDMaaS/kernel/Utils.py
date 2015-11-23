@@ -12,15 +12,17 @@
 import sys
 import os
 from glob import glob
-import __builtin__
-
+from tempfile import NamedTemporaryFile
 
 from ROOTDMaaS.io import Handler
 
+import ROOT 
+
+import __builtin__
 
 _ioHandler = None
-_Executor = None
-_Declarer = None
+_Executor  = None
+_Declarer  = None
 
 def GetIOHandler():
     global _ioHandler
@@ -44,6 +46,15 @@ def GetDeclarer():
         _Declarer = ROOTDMaaSDeclarer
     return _Declarer
 
+
+def ACLiC(code):
+     tmpfile = NamedTemporaryFile(delete=False,suffix='.C',dir=os.getcwd())#will be removed when library is created
+     tmpfile.write(code)
+     tmpfilename = tmpfile.name
+     tmpfile.close()
+     Executor = GetExecutor()
+     status = Executor('.L %s+'%tmpfilename)
+     return status
 
 class MagicLoader(object):
     '''Class to load ROOTDMaaS Magics'''

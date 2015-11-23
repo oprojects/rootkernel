@@ -13,10 +13,6 @@ from metakernel import Magic, option
 
 import sys
 
-from ROOTaaS.iPyROOT import utils #require for ACLiC
-
-from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor,GetDeclarer
-
 #NOTE:actually ROOTaaS is not capturing the error on %%cpp -d if the function is wrong 
 class CppMagics(Magic):
     def __init__(self, kernel):
@@ -34,7 +30,7 @@ class CppMagics(Magic):
              self.kernel.ioHandler.InitCapture()
              
              if args=='-a':
-                 utils.invokeAclic(self.code)
+                 self.kernel.ACLiC(self.code)
              elif args=='-d':
                  self.kernel.Declarer(str(self.code))
              else:
@@ -53,3 +49,4 @@ class CppMagics(Magic):
         
 def register_magics(kernel):
     kernel.register_magics(CppMagics)
+    
