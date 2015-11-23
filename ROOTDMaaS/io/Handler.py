@@ -26,7 +26,14 @@ CHeaders += '}\n'
 #required class to capture i/o
 #NOTE: this class required a system to flush in a fork
 #if pipe is 1M 1024*1024 size then hung up
-CPPIOClass ='class ROOTDMSaaSExecutorHandler{'
+
+CPPIOClass ='#ifndef F_LINUX_SPECIFIC_BASE\n'
+CPPIOClass +='#define F_LINUX_SPECIFIC_BASE       1024\n'
+CPPIOClass +='#endif\n'
+CPPIOClass +='#ifndef F_SETPIPE_SZ\n'
+CPPIOClass +='#define F_SETPIPE_SZ    (F_LINUX_SPECIFIC_BASE + 7)\n'
+CPPIOClass +='#endif\n'
+CPPIOClass +='class ROOTDMSaaSExecutorHandler{'
 CPPIOClass +='private:'
 CPPIOClass +='  bool capturing;'
 CPPIOClass +='  long MAX_PIPE_SIZE=1048575;'#size of the pipi to capture stdout/stderr

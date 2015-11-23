@@ -24,6 +24,13 @@ extern "C"
 }
 
 
+#ifndef F_LINUX_SPECIFIC_BASE
+#define F_LINUX_SPECIFIC_BASE       1024
+#endif
+#ifndef F_SETPIPE_SZ
+#define F_SETPIPE_SZ	(F_LINUX_SPECIFIC_BASE + 7)
+#endif
+
 //class to capture stderr/stdout 
 //also return the status of the execution
 //NOTE: create a system to flush current pipe in a fork
@@ -58,7 +65,7 @@ public:
       fflush( stdout );
       /* save stdout/stderr for display later */
       saved_stdout = dup(STDOUT_FILENO);  
-//       saved_stderr = dup(STDERR_FILENO);  
+      saved_stderr = dup(STDERR_FILENO);  
       if( pipe(stdout_pipe) != 0 ) {          /* make a pipe for stdout*/
         return;
       }
@@ -70,7 +77,7 @@ public:
       flags_stdout |= O_NONBLOCK; 
       fcntl(stdout_pipe[0], F_SETFL, flags_stdout);
       fcntl(stdout_pipe[0], F_SETPIPE_SZ, MAX_PIPE_SIZE);//setting pipe size
-      
+     
       long flags_stderr = fcntl(stderr_pipe[0], F_GETFL); 
       flags_stderr |= O_NONBLOCK; 
       fcntl(stderr_pipe[0], F_SETFL, flags_stderr);
@@ -95,7 +102,7 @@ public:
       char ch;
       while(true)/* read from pipe into buffer */
       {
-//         fflush(stdout);
+         fflush(stdout);
         buf_readed = read(stdout_pipe[0], &ch, 1);
         if(buf_readed==1) stdoutpipe += ch;
         else break;
@@ -103,7 +110,7 @@ public:
       
       while(true)/* read from pipe into buffer */
       {
-//         fflush(stderr);
+         fflush(stderr);
         buf_readed = read(stderr_pipe[0], &ch, 1);
         if(buf_readed==1) stderrpipe += ch;
         else break;
@@ -170,9 +177,9 @@ void ROOTDMaaS()
   ROOTDMSaaSExecutorHandler io;
   io.clear();
   io.InitCapture();
-//   ROOTDMaaSExecutor("int *a=0;");
-//   ROOTDMaaSExecutor("a[10]=0;");
-  ROOTDMaaSExecutor("for(int i=0;i<100000;i++) std::cout<<i<<std::endl;");
+   ROOTDMaaSExecutor("int *a=0;");
+   ROOTDMaaSExecutor("a[10]=0;");
+//  ROOTDMaaSExecutor("for(int i=0;i<10;i++) std::cout<<i<<std::endl;");
   io.EndCapture();
   std::cout<<"--------------STDOUT--------------------\n";
   std::cout<<io.getStdout();
