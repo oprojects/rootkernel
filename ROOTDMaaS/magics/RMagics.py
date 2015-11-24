@@ -31,7 +31,9 @@ CPPRPlots = 'std::vector<std::string> ROOTDMaaSExecutorRPlots()\n'
 CPPRPlots += '{\n'
 CPPRPlots += '  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();\n'
 CPPRPlots += '  std::vector<std::string> plots;\n'
-CPPRPlots += '  r[".files"]>>plots;\n'
+CPPRPlots += '  int size;\n'
+CPPRPlots += '  r["length(.files)"]>>size;\n'
+CPPRPlots += '  if(size>0)r[".files"]>>plots;\n'
 CPPRPlots += ' return plots;\n'
 CPPRPlots += '}\n'
 
@@ -132,7 +134,7 @@ class RMagics(Magic):
                     img = IPython.display.Image(filename=i, format='png', embed=True)
                     self.kernel.Display(img)
                     os.unlink(i)
-             self.RExecutor('.files = c()')
+             self.RExecutor('.files = c()')#removing file names cache
         self.evaluate = False
         
 def register_magics(kernel):
