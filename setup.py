@@ -60,19 +60,21 @@ setup_args = dict(
     version         = '0.0.1',
     py_modules      = root_modules,
     scripts         = glob(pjoin('scripts', '*')),
-    description     = "ROOT/C++ Kernel for Jupyter",
+    description     = "CERN's ROOT/C++ Kernel for Jupyter",
     author          = 'Omar Zapata, Danilo Piparo, Enric Tejedor',
-    author_email    = 'Omar.Zapata@cern.ch,Danilo.Piparo@cern.ch,enric.tejedor.saavedra@cern.ch',
-    url             = 'https://github.com/oproject/rootkernel',
+    author_email    = 'Omar.Zapata@cern.ch',
+    url             = 'http://oproject.org/ROOT%20Jupyter%20Kernel',
     license         = 'BSD',
     platforms       = "Linux, Mac OS X",
-    keywords        = ['Interactive', 'Interpreter', 'Shell', 'Web'],
+    keywords        = ['Interactive', 'Interpreter', 'Shell', 'Web','ROOT'],
     classifiers     = [
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
     ],
@@ -87,6 +89,9 @@ install_requires = setuptools_args['install_requires'] = [
     'pyzmq',
     'tornado',
     'pexpect',
+    'jedi',
+    'metakernel',
+    'jupyter'
 ]
 
 if 'setuptools' in sys.modules:
