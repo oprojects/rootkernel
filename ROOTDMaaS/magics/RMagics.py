@@ -72,9 +72,27 @@ RPlotFlush += 'dev.off()\n'
 RPlotFlush += '}\n'
 
 
+RCompleterCode =  'std::vector<std::string> ROOTDMaaSExecutorRCompleter(TString code)\n'
+RCompleterCode += '{\n'
+RCompleterCode += '  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();\n'
+RCompleterCode += '  r[".line"]<<code;\n'
+RCompleterCode += '  r[".cursor_pos"]<<code.Length();  \n'
+RCompleterCode += '  r<<"utils:::.assignLinebuffer(.line)";\n'
+RCompleterCode += '  r<<"utils:::.assignEnd(.cursor_pos)";\n'
+RCompleterCode += '  r<<"utils:::.guessTokenFromLine()";\n'
+RCompleterCode += '  r<<"utils:::.completeToken()";\n'
+RCompleterCode += '  std::vector<std::string> completions;\n'
+RCompleterCode += '  int size;\n'
+RCompleterCode += '  r["length(utils:::.retrieveCompletions())"]>>size;\n'
+RCompleterCode += '  if(size>0) r["utils:::.retrieveCompletions()"]>>completions;\n'
+RCompleterCode += '  r<<"utils:::.guessTokenFromLine(update = FALSE)";\n'
+RCompleterCode += '  return completions;\n'
+RCompleterCode += '}\n'
+
 
 RExecutor = None
 RExecutorPlots = None
+RCompleter = None
 
 #needs error control if ROOT-R is not installed
 def LoadRExecutor(kernel):
@@ -101,6 +119,18 @@ def LoadRExecutorPlots(kernel):
             except ImportError:
                 raise Exception("Error: importing ROOTDMaaSExecutorRPlots)")
 
+def LoadRCompleter(kernel):
+    global RCompleter
+    status = False
+    if not RCompleter:
+        status = kernel.Declarer(str(RCompleterCode))
+        if status:
+            try:
+                from ROOT import ROOTDMaaSExecutorRCompleter
+                RCompleter = ROOTDMaaSExecutorRCompleter
+            except ImportError:
+                raise Exception("Error: importing ROOTDMaaSExecutorRCompleter)")
+
 
 #NOTE:actually ROOTaaS is not capturing the error on %%cpp -d if the function is wrong 
 class RMagics(Magic):
@@ -108,8 +138,10 @@ class RMagics(Magic):
         super(RMagics, self).__init__(kernel)
         global RExecutor
         global RExecutorPlots
+        global RCompleter
         self.RExecutor = RExecutor
         self.RExecutorPlots = RExecutorPlots
+        self.RCompleter = RCompleter
         self.RExecutor("options(device='png')")
 
     def cell_r(self, args):
@@ -136,6 +168,11 @@ class RMagics(Magic):
                     os.unlink(i)
              self.RExecutor('.files = c()')#removing file names cache
         self.evaluate = False
+    def get_completions(self, info):
+        if self.RCompleter is not None:
+            return self.RCompleter(info['code'])
+        else:
+            return []
         
 def register_magics(kernel):
     #trying to load ROOT-R stuff
@@ -143,6 +180,7 @@ def register_magics(kernel):
     kernel.Executor('#include<TRInterface.h>')
     LoadRExecutor(kernel)
     LoadRExecutorPlots(kernel)
+    LoadRCompleter(kernel)
     global RExecutor
     if RExecutor is not None:
         RExecutor(RPlotFunctions)

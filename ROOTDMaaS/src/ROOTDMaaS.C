@@ -194,19 +194,54 @@ std::vector<std::string> ROOTDMaaSExecutorRPlots()
   return plots;
 }
 
+std::vector<std::string> ROOTDMaaSExecutorRCompleter(TString code)
+{
+  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();
+  r[".line"]<<code;
+  r[".cursor_pos"]<<code.Length();
+  
+  r<<"utils:::.assignLinebuffer(.line)";
+  r<<"utils:::.assignEnd(.cursor_pos)";
+  r<<"utils:::.guessTokenFromLine()";
+  r<<"utils:::.completeToken()";
+  std::vector<std::string> completions;
+  int size;
+  r["length(utils:::.retrieveCompletions())"]>>size;
+  if(size>0) r["utils:::.retrieveCompletions()"]>>completions;
+  r<<"utils:::.guessTokenFromLine(update = FALSE)";
+  return completions;
+}
+
+
 
 void ROOTDMaaS()
 {
   ROOTDMSaaSExecutorHandler io;
-  io.clear();
-  io.InitCapture();
+//   io.clear();
+//   io.InitCapture();
 //    ROOTDMaaSExecutor("int *a=0;");
 //    ROOTDMaaSExecutor("a[10]=0;");
 //  ROOTDMaaSExecutor("for(int i=0;i<10;i++) std::cout<<i<<std::endl;");
-  ROOTDMaaSExecutorR("print('Hola R')");
-  io.EndCapture();
-  std::cout<<"--------------STDOUT--------------------\n";
-  std::cout<<io.getStdout();
-  std::cout<<"\n--------------STDOUT--------------------\n";
-  std::cout<<io.getStderr();
+//   ROOTDMaaSExecutorR("print('Hola R')");
+//   io.EndCapture();
+//   std::cout<<"--------------STDOUT--------------------\n";
+//   std::cout<<io.getStdout();
+//   std::cout<<"\n--------------STDOUT--------------------\n";
+//   std::cout<<io.getStderr();
+   
+  std::cout<<"\n--------------Completer--------------------\n";
+  std::vector<std::string> lines=ROOTDMaaSExecutorRCompleter("read");
+ 
+  for(int i=0;i<lines.size();i++)
+  {
+      std::cout<<lines[i]<<std::endl;
+  }
+  lines=ROOTDMaaSExecutorRCompleter("plo");
+  std::cout<<"\n--------------Completer--------------------\n";
+
+  for(int i=0;i<lines.size();i++)
+  {
+      std::cout<<lines[i]<<std::endl;
+  }
+    
 }
