@@ -63,6 +63,11 @@ RPlotFunctions += '.files = get(".files", envir=.GlobalEnv)\n'
 RPlotFunctions += '.files = append(.files,tmpfile)\n'
 RPlotFunctions += 'assign(".files", .files, envir = .GlobalEnv)\n'
 RPlotFunctions += '}\n'
+RPlotFunctions += 'unlockBinding("png",getNamespace("grDevices"))\n'
+RPlotFunctions += 'assign("png", png, getNamespace("grDevices"))\n'
+RPlotFunctions += 'lockBinding("png", getNamespace("grDevices"))\n'
+
+
 
 RPlotFlush = 'for (i in dev.list())\n'
 RPlotFlush += '{\n'
@@ -143,6 +148,9 @@ class RMagics(Magic):
         self.RExecutorPlots = RExecutorPlots
         self.RCompleter = RCompleter
         self.RExecutor("options(device='png')")
+        self.RExecutor("x11=dev.new")
+        self.RExecutor("windows=dev.new")
+        self.RExecutor("quartz=dev.new")
 
     def cell_r(self, args):
         '''Executes the content of the cell as R code.'''                

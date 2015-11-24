@@ -1,5 +1,5 @@
 options(device='png')
-
+# require(grDevices)
 .files = c()
 .dev.new = dev.new
 .png = png
@@ -26,12 +26,20 @@ dev.new = function()
 {
 png()
 }
+
+unlockBinding("png",getNamespace("grDevices"))
+assign("png", png, getNamespace("grDevices"))
+lockBinding("png", getNamespace("grDevices"))
+
+# unlockBinding("termplot", )
+# assign("termplot", my.termplot, as.environment("package:stats"))
+# lockBinding("termplot", as.environment("package:stats"))
 # x11=dev.new
 # windows=dev.new
 
-# plot(sin)
-# dev.new()
-# plot(cos)
+plot(sin)
+dev.new()
+plot(cos)
 
 for (i in dev.list())
 {
