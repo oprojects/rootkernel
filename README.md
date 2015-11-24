@@ -46,9 +46,10 @@ or for IPython/Jupyter < 4:
     ipython kernelspec install root
 
 ##  Copyright (c) 2015, ROOT Team.
-  Authors: Omar Zapata <Omar.Zapata@cern.ch> OProject
-           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
-           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
-  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
-  Distributed under the terms of the Modified BSD License.
+Authors: 
+* Omar Zapata <Omar.Zapata@cern.ch> OProject
+* Danilo Piparo <Danilo.Piparo@cern.ch> CERN
+* Enric Tejedor <enric.tejedor.saavedra@cern.ch> CERN
+website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
+ Distributed under the terms of the Modified BSD License.
 
