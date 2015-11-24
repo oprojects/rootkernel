@@ -7,6 +7,8 @@ ROOT(C++) Jupyter Kernel for the project  ROOTDMaaS (ROOT Data Mining as a Servi
 * C++ Tab-completion
 * Python(Magic Cell)  highlighting
 * Python(Magic Cell) Tab-completion (using jedi)
+* R(Magic Cell)  highlighting
+* R(Magic Cell) Tab-completion (using jedi)
 * JSROOT implemented
 * ipython magics supported(shell,python,html,etc..)
 * I/O capture for segfault and in general
