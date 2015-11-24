@@ -172,14 +172,38 @@ Bool_t ROOTDMaaSDeclarer(TString code)
   return status;
 }
 
+
+Bool_t ROOTDMaaSExecutorR(TString code)
+{
+  Bool_t status=kFALSE;
+  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();
+  TRY {
+    r.Execute(code);
+    status=kTRUE;
+  } CATCH(excode) {
+    status=kTRUE;
+  } ENDTRY;
+  return status;
+}
+
+std::vector<std::string> ROOTDMaaSExecutorRPlots()
+{
+  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();
+  std::vector<std::string> plots;
+  r[".files"]>>plots;
+  return plots;
+}
+
+
 void ROOTDMaaS()
 {
   ROOTDMSaaSExecutorHandler io;
   io.clear();
   io.InitCapture();
-   ROOTDMaaSExecutor("int *a=0;");
-   ROOTDMaaSExecutor("a[10]=0;");
+//    ROOTDMaaSExecutor("int *a=0;");
+//    ROOTDMaaSExecutor("a[10]=0;");
 //  ROOTDMaaSExecutor("for(int i=0;i<10;i++) std::cout<<i<<std::endl;");
+  ROOTDMaaSExecutorR("print('Hola R')");
   io.EndCapture();
   std::cout<<"--------------STDOUT--------------------\n";
   std::cout<<io.getStdout();

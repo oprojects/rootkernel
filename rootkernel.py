@@ -76,11 +76,11 @@ class ROOTKernel(MetaKernel):
         #JSROOT.enableJSVisDebug()
         JSROOT.setStyle()
         JSROOT.LoadDrawer()
-        self.magicloader = MagicLoader(self)        
         self.ioHandler = GetIOHandler()
         self.Executor  = GetExecutor()
         self.Declarer  = GetDeclarer()#required for %%cpp -d magic
         self.ACLiC     = ACLiC
+        self.magicloader = MagicLoader(self)        
         self.parser = Parser(self.identifier_regex, self.func_call_regex,
                              self.magic_prefixes, self.help_suffix)
         self.completer = CppCompleter()
