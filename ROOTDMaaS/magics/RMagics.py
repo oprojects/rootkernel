@@ -178,7 +178,7 @@ class RMagics(Magic):
         self.evaluate = False
     def get_completions(self, info):
         if self.RCompleter is not None:
-            return self.RCompleter(info['code'])
+            return self.RCompleter(str(info['code']))
         else:
             return []
         
