@@ -48,7 +48,7 @@ def GetDeclarer():
 
 
 def ACLiC(code):
-     tmpfile = NamedTemporaryFile(delete=False,suffix='.C',dir=os.getcwd())#will be removed when library is created
+     tmpfile = NamedTemporaryFile(delete=False,suffix='.C',dir=os.getcwd())
      tmpfile.write(code)
      tmpfilename = tmpfile.name
      tmpfile.close()

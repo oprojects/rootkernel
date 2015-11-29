@@ -37,9 +37,17 @@ lockBinding("png", getNamespace("grDevices"))
 # x11=dev.new
 # windows=dev.new
 
-plot(sin)
-dev.new()
-plot(cos)
+# local(library(lattice),.GlobalEnv) 
+# local(attach(mtcars),.GlobalEnv)
+# local(gear.f<-factor(gear,levels=c(3,4,5),labels=c('3gears','4gears','5gears')) ,.GlobalEnv)
+# local(cyl.f <-factor(cyl,levels=c(4,6,8),labels=c('4cyl','6cyl','8cyl')) ,.GlobalEnv)
+# local(densityplot(~mpg,    main='Density Plot',    xlab='Miles per Gallon'),.GlobalEnv)
+
+
+
+# plot(sin)
+# dev.new()
+# plot(cos)
 
 for (i in dev.list())
 {

@@ -18,8 +18,10 @@ CPPRFunctions ='Bool_t ROOTDMaaSExecutorR(TString code)\n'
 CPPRFunctions +='{\n'
 CPPRFunctions +='  Bool_t status=kFALSE;\n'
 CPPRFunctions +='  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();\n'
+CPPRFunctions +='  r.SetVerbose(1);\n'
+CPPRFunctions +='  ROOT::R::TRFunctionImport JuPyROOTREvaluate(\".JuPyROOTREvaluate\");\n'
 CPPRFunctions +='  TRY {\n'
-CPPRFunctions +='    r.Execute(code);\n'
+CPPRFunctions +='     JuPyROOTREvaluate(code);'
 CPPRFunctions +='    status=kTRUE;\n'
 CPPRFunctions +='  } CATCH(excode) {\n'
 CPPRFunctions +='    status=kTRUE;\n'
@@ -27,54 +29,64 @@ CPPRFunctions +='  } ENDTRY;\n'
 CPPRFunctions +='  return status;\n'
 CPPRFunctions +='}\n'
 
+
+RLoadHandlers = 'Bool_t ROOTDMaaSExecutorRLoadHanlders(TString code)\n'
+RLoadHandlers +='{\n'
+RLoadHandlers +='  Bool_t status=kFALSE;\n'
+RLoadHandlers +='  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();\n'
+RLoadHandlers +='  TRY {\n'
+RLoadHandlers +='    r.Execute(code);\n'
+RLoadHandlers +='    status=kTRUE;\n'
+RLoadHandlers +='  } CATCH(excode) {\n'
+RLoadHandlers +='    status=kTRUE;\n'
+RLoadHandlers +='  } ENDTRY;\n'
+RLoadHandlers +='  return status;\n'
+RLoadHandlers +='}\n'
+
+
+
+
+RHandlerFunctions="require(evaluate)\n";
+RHandlerFunctions+=".JuPyROOTRstdout = function(msg){write(msg, stdout())}\n";
+RHandlerFunctions+=".JuPyROOTRstderr = function(msg){write(msg, stderr())}\n";
+RHandlerFunctions+=".plot_files = c()\n";
+RHandlerFunctions+="assign('.plot_files', c(), envir = .GlobalEnv)\n";
+RHandlerFunctions+=".JuPyROOTRPlotHandler = function(obj)\n";
+RHandlerFunctions+="{\n";
+RHandlerFunctions+="tmpfile=tempfile(tmpdir='.',fileext='.png')\n";
+RHandlerFunctions+="png(tmpfile)\n";
+RHandlerFunctions+="replayPlot(obj)\n";
+RHandlerFunctions+="dev.off()\n";
+RHandlerFunctions+=".plot_files = get('.plot_files', envir=.GlobalEnv)\n";
+RHandlerFunctions+=".plot_files = append(.plot_files,tmpfile)\n";
+RHandlerFunctions+="assign('.plot_files', .plot_files, envir = .GlobalEnv)\n";
+RHandlerFunctions+="}\n";
+RHandlerFunctions+=".JuPyROOTROutPutHandler  = new_output_handler(text=.JuPyROOTRstdout,error=.JuPyROOTRstderr,graphics=.JuPyROOTRPlotHandler)\n";
+RHandlerFunctions+=".JuPyROOTRPrintValues = function(x){\n";
+RHandlerFunctions+="classes = evaluate:::classes(x)\n";
+RHandlerFunctions+="len = length(x)-1\n";
+RHandlerFunctions+="for(i in 1:len){\n";
+RHandlerFunctions+="    if(classes[i]=='character') write(x[[i]],stdout())\n";
+RHandlerFunctions+="}\n";
+RHandlerFunctions+="}\n";
+RHandlerFunctions+=".JuPyROOTREvaluate = function(code){\n";
+RHandlerFunctions+=".a=evaluate('options(device=pdf)',new_device=0, envir = .GlobalEnv)\n";
+RHandlerFunctions+=".b=evaluate(code,output_handler = .JuPyROOTROutPutHandler,envir = .GlobalEnv)\n";
+RHandlerFunctions+=".JuPyROOTRPrintValues(.b)\n";
+RHandlerFunctions+="}\n";
+
+
 CPPRPlots = 'std::vector<std::string> ROOTDMaaSExecutorRPlots()\n'
 CPPRPlots += '{\n'
 CPPRPlots += '  ROOT::R::TRInterface &r=ROOT::R::TRInterface::Instance();\n'
 CPPRPlots += '  std::vector<std::string> plots;\n'
 CPPRPlots += '  int size;\n'
-CPPRPlots += '  r["length(.files)"]>>size;\n'
-CPPRPlots += '  if(size>0)r[".files"]>>plots;\n'
+CPPRPlots += '  r["length(.plot_files)"]>>size;\n'
+CPPRPlots += '  if(size>0)r[".plot_files"]>>plots;\n'
+CPPRPlots += '  r<<".plot_files = c()";\n'
 CPPRPlots += ' return plots;\n'
 CPPRPlots += '}\n'
 
-
-
-#R Functions to capture plots
-RPlotFunctions =  'options(device="png")\n'
-RPlotFunctions += '.files = c()\n'
-RPlotFunctions += '.dev.new = dev.new\n'
-RPlotFunctions += '.png = png\n'
-RPlotFunctions += 'assign(".files", c(), envir = .GlobalEnv)\n'
-RPlotFunctions += 'assign(".dev.new",dev.new, envir = .GlobalEnv)\n'
-RPlotFunctions += 'assign(".png",png, envir = .GlobalEnv)\n'
-RPlotFunctions += 'png = function(filename = "Rplot.png",\n'
-RPlotFunctions += '         width = 800, height = 600, units = "px", pointsize = 15,\n'
-RPlotFunctions += '          bg = "white",  res = NA, ...,\n'
-RPlotFunctions += '          type = c("cairo", "cairo-png", "Xlib", "quartz"), antialias)\n'
-RPlotFunctions += '{\n'
-RPlotFunctions += '.png = get(".png", envir=.GlobalEnv)\n'
-RPlotFunctions += 'tmpfile=filename\n'
-RPlotFunctions += 'if(filename == "Rplot.png")\n'
-RPlotFunctions += '{\n'
-RPlotFunctions += '  tmpfile=tempfile(tmpdir=".",fileext=".png")\n'
-RPlotFunctions += '}\n'
-RPlotFunctions += '.png(tmpfile,width,height,units,pointsize,bg,res)\n'
-RPlotFunctions += '.files = get(".files", envir=.GlobalEnv)\n'
-RPlotFunctions += '.files = append(.files,tmpfile)\n'
-RPlotFunctions += 'assign(".files", .files, envir = .GlobalEnv)\n'
-RPlotFunctions += '}\n'
-RPlotFunctions += 'unlockBinding("png",getNamespace("grDevices"))\n'
-RPlotFunctions += 'assign("png", png, getNamespace("grDevices"))\n'
-RPlotFunctions += 'lockBinding("png", getNamespace("grDevices"))\n'
-
-
-
-RPlotFlush = 'for (i in dev.list())\n'
-RPlotFlush += '{\n'
-RPlotFlush += 'dev.set(i)\n'
-RPlotFlush += 'dev.flush()\n'
-RPlotFlush += 'dev.off()\n'
-RPlotFlush += '}\n'
 
 
 RCompleterCode =  'std::vector<std::string> ROOTDMaaSExecutorRCompleter(TString code)\n'
@@ -112,6 +124,15 @@ def LoadRExecutor(kernel):
             except ImportError:
                 raise Exception("Error: importing ROOTDMaaSExecutorR)")
 
+def RExecutorLoadHandlers(kernel):
+    status = kernel.Declarer(str(RLoadHandlers))
+    if status:
+        try:
+            from ROOT import ROOTDMaaSExecutorRLoadHanlders
+            ROOTDMaaSExecutorRLoadHanlders(str(RHandlerFunctions))
+        except ImportError:
+            raise Exception("Error: importing ROOTDMaaSExecutorRLoadHanlders)")
+
 def LoadRExecutorPlots(kernel):
     global RExecutorPlots
     status = False
@@ -147,10 +168,6 @@ class RMagics(Magic):
         self.RExecutor = RExecutor
         self.RExecutorPlots = RExecutorPlots
         self.RCompleter = RCompleter
-        self.RExecutor("options(device='png')")
-        self.RExecutor("x11=dev.new")
-        self.RExecutor("windows=dev.new")
-        self.RExecutor("quartz=dev.new")
 
     def cell_r(self, args):
         '''Executes the content of the cell as R code.'''                
@@ -158,7 +175,6 @@ class RMagics(Magic):
              self.kernel.ioHandler.clear()
              self.kernel.ioHandler.InitCapture()
              self.RExecutor(str(self.code))
-             self.RExecutor(str(RPlotFlush))
              self.kernel.ioHandler.EndCapture()
              std_out = self.kernel.ioHandler.getStdout()
              std_err = self.kernel.ioHandler.getStderr()
@@ -174,7 +190,6 @@ class RMagics(Magic):
                     img = IPython.display.Image(filename=i, format='png', embed=True)
                     self.kernel.Display(img)
                     os.unlink(i)
-             self.RExecutor('.files = c()')#removing file names cache
         self.evaluate = False
     def get_completions(self, info):
         if self.RCompleter is not None:
@@ -186,11 +201,11 @@ def register_magics(kernel):
     #trying to load ROOT-R stuff
     #if ROOT-R is not installed then the magics will not be loaded
     kernel.Executor('#include<TRInterface.h>')
+    RExecutorLoadHandlers(kernel)
     LoadRExecutor(kernel)
     LoadRExecutorPlots(kernel)
     LoadRCompleter(kernel)
     global RExecutor
     if RExecutor is not None:
-        RExecutor(RPlotFunctions)
         kernel.register_magics(RMagics)
     
