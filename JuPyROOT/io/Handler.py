@@ -3,7 +3,7 @@
 #  Copyright (c) 2015, ROOT Team.
 #  Authors: Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
 #  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
-#  Distributed under the terms of the Modified BSD License.
+#  Distributed under the terms of the Modified LGPLv3 License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.
 #-----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ CPPIOClass +='#endif\n'
 CPPIOClass +='#ifndef F_SETPIPE_SZ\n'
 CPPIOClass +='#define F_SETPIPE_SZ    (F_LINUX_SPECIFIC_BASE + 7)\n'
 CPPIOClass +='#endif\n'
-CPPIOClass +='class ROOTDMSaaSExecutorHandler{'
+CPPIOClass +='class JuPyROOTExecutorHandler{'
 CPPIOClass +='private:'
 CPPIOClass +='  bool capturing;'
 CPPIOClass +='  long MAX_PIPE_SIZE=1048575;'#size of the pipi to capture stdout/stderr
@@ -44,7 +44,7 @@ CPPIOClass +='  int stderr_pipe[2];'
 CPPIOClass +='  int saved_stderr;'
 CPPIOClass +='  int saved_stdout;'
 CPPIOClass +='public:'
-CPPIOClass +='ROOTDMSaaSExecutorHandler(){'
+CPPIOClass +='JuPyROOTExecutorHandler(){'
 CPPIOClass +='  capturing=false;'
 CPPIOClass +='}'
 CPPIOClass +='void InitCapture()'
@@ -113,7 +113,7 @@ CPPIOClass +='};'
 
 
 #function to execute capturing segfault
-CPPIOFunctions ='Bool_t ROOTDMaaSExecutor(TString code)'
+CPPIOFunctions ='Bool_t JuPyROOTExecutor(TString code)'
 CPPIOFunctions +='{'
 CPPIOFunctions +='  Bool_t status=kFALSE;'
 CPPIOFunctions +='  TRY {'
@@ -129,7 +129,7 @@ CPPIOFunctions +='}'
 
 
 #function to declare capturing segfault
-CPPIOFunctions +='Bool_t ROOTDMaaSDeclarer(TString code)'
+CPPIOFunctions +='Bool_t JuPyROOTDeclarer(TString code)'
 CPPIOFunctions +='{'
 CPPIOFunctions +='  Bool_t status=kFALSE;'
 CPPIOFunctions +='  TRY {'

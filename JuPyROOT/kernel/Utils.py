@@ -5,7 +5,7 @@
 #           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
 #           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
 #  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
-#  Distributed under the terms of the Modified BSD License.
+#  Distributed under the terms of the Modified LGPLv3 License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.
 #-----------------------------------------------------------------------------
@@ -14,7 +14,7 @@ import os
 from glob import glob
 from tempfile import NamedTemporaryFile
 
-from ROOTDMaaS.io import Handler
+from JuPyROOT.io import Handler
 
 import ROOT 
 
@@ -28,22 +28,22 @@ def GetIOHandler():
     global _ioHandler
     if not _ioHandler:
         Handler.LoadHandlers()
-        from ROOT import ROOTDMSaaSExecutorHandler
-        _ioHandler = ROOTDMSaaSExecutorHandler()
+        from ROOT import JuPyROOTExecutorHandler
+        _ioHandler = JuPyROOTExecutorHandler()
     return _ioHandler
     
 def GetExecutor():
     global _Executor
     if not _Executor:
-        from ROOT import ROOTDMaaSExecutor
-        _Executor = ROOTDMaaSExecutor
+        from ROOT import JuPyROOTExecutor
+        _Executor = JuPyROOTExecutor
     return _Executor
 
 def GetDeclarer():
     global _Declarer
     if not _Declarer:
-        from ROOT import ROOTDMaaSDeclarer
-        _Declarer = ROOTDMaaSDeclarer
+        from ROOT import JuPyROOTDeclarer
+        _Declarer = JuPyROOTDeclarer
     return _Declarer
 
 
@@ -57,12 +57,12 @@ def ACLiC(code):
      return status
 
 class MagicLoader(object):
-    '''Class to load ROOTDMaaS Magics'''
+    '''Class to load JuPyROOT Magics'''
     def __init__(self,kernel):        
          magics_path = os.path.dirname(__file__)+"/../magics/*.py"
          for file in glob(magics_path):
               if file != magics_path.replace("*.py","__init__.py"):
-                  module_path="ROOTDMaaS.magics."+file.split("/")[-1].replace(".py","")
+                  module_path="JuPyROOT.magics."+file.split("/")[-1].replace(".py","")
                   try:
                       module= __builtin__.__import__(module_path, globals(), locals(), ['register_magics'], -1)
                       module.register_magics(kernel)

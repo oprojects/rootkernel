@@ -4,7 +4,7 @@
   "argv": [
       "python",
       "-m",
-      "rootkernel",
+      "ROOTKernel",
       "-f",
       "{connection_file}"
   ]

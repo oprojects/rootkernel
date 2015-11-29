@@ -52,6 +52,8 @@ Authors:
 * Omar Zapata <Omar.Zapata@cern.ch> OProject
 * Danilo Piparo <Danilo.Piparo@cern.ch> CERN
 * Enric Tejedor <enric.tejedor.saavedra@cern.ch> CERN
+
 website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
- Distributed under the terms of the Modified BSD License.
+
+Distributed under the terms of the Modified LGPLv3 License.
 

@@ -6,7 +6,7 @@
 #           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
 #           Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
 #  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
-#  Distributed under the terms of the Modified BSD License.
+#  Distributed under the terms of the Modified LGPLv3 License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.
 #-----------------------------------------------------------------------------

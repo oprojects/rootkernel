@@ -5,8 +5,8 @@
 #  Authors: Omar Zapata <Omar.Zapata@cern.ch> http://oproject.org
 #           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
 #           Enric Tejedor enric.tejedor.saavedra@cern.ch> CERN
-#  website: http://oproject.org/ROOTDMaaS (information only for ROOT kernel)
-#  Distributed under the terms of the Modified BSD License.
+#  website: http://oproject.org/JuPyROOT (information only for ROOT kernel)
+#  Distributed under the terms of the Modified LGPLv3 License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.
 #-----------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 from __future__ import print_function
 
 # the name of the project
-name = 'rootkernel'
+name = 'JuPyROOT'
 
 #-----------------------------------------------------------------------------
 # Minimal Python version sanity check
@@ -43,12 +43,12 @@ pjoin = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
 pkg_root = pjoin(here, name)
 
-MAGICSPATH = "ROOTDMaaS/magics/"
+MAGICSPATH = "JuPyROOT/magics/"
 
 ##reading ROOT modules and Magics
-root_modules =  ['rootkernel','ROOTDMaaS/io/Handler','ROOTDMaaS/js/JSROOT']
-root_modules += ['ROOTDMaaS/kernel/CppCompleter','ROOTDMaaS/kernel/Utils']
-root_modules += ['ROOTDMaaS/__init__','ROOTDMaaS/io/__init__','ROOTDMaaS/js/__init__','ROOTDMaaS/kernel/__init__']
+root_modules =  ['ROOTKernel','JuPyROOT/io/Handler','JuPyROOT/js/JSROOT']
+root_modules += ['JuPyROOT/kernel/CppCompleter','JuPyROOT/kernel/Utils']
+root_modules += ['JuPyROOT/__init__','JuPyROOT/io/__init__','JuPyROOT/js/__init__','JuPyROOT/kernel/__init__']
 os.chdir(MAGICSPATH)
 for file in glob("*.py"):
     root_modules.append(MAGICSPATH+file.replace(".py",""))
@@ -64,14 +64,14 @@ setup_args = dict(
     author          = 'Omar Zapata, Danilo Piparo, Enric Tejedor',
     author_email    = 'Omar.Zapata@cern.ch',
     url             = 'http://oproject.org/ROOT%20Jupyter%20Kernel',
-    license         = 'BSD',
+    license         = 'LGPLv3',
     platforms       = "Linux, Mac OS X",
     keywords        = ['Interactive', 'Interpreter', 'Shell', 'Web','ROOT'],
     classifiers     = [
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: LGPLv3 License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',

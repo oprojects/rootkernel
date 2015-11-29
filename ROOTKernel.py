@@ -6,7 +6,7 @@
 #           Danilo Piparo <Danilo.Piparo@cern.ch> CERN
 #           Enric Tejedor <enric.tejedor.saavedra@cern.ch> CERN
 #  website: http://oproject.org/ROOT+Jupyter+Kernel (information only for ROOT kernel)
-#  Distributed under the terms of the Modified BSD License.
+#  Distributed under the terms of the Modified LGPLv3 License.
 #
 #  The full license is in the file COPYING.rst, distributed with this software.
 #-----------------------------------------------------------------------------
@@ -36,11 +36,11 @@ except ImportError:
 
 
 try:
-    from ROOTDMaaS.kernel.Utils import GetIOHandler, GetExecutor, GetDeclarer, ACLiC, MagicLoader
-    from ROOTDMaaS.kernel.CppCompleter import CppCompleter
-    from ROOTDMaaS.js import JSROOT 
+    from JuPyROOT.kernel.Utils import GetIOHandler, GetExecutor, GetDeclarer, ACLiC, MagicLoader
+    from JuPyROOT.kernel.CppCompleter import CppCompleter
+    from JuPyROOT.js import JSROOT 
 except ImportError:
-    raise Exception("Error: ROOTDMaaS not found")
+    raise Exception("Error: JuPyROOT not found")
 
 import IPython
 
@@ -69,7 +69,7 @@ class ROOTKernel(MetaKernel):
                      'codemirror_mode': 'text/x-c++src',
                      'mimetype': ' text/x-c++src',
                      'file_extension': '.C'}
-    banner = "CERN's ROOT Kernel(ROOTDMaaS) %s"%ROOT.gROOT.GetVersion()
+    banner = "CERN's ROOT Kernel(JuPyROOT) %s"%ROOT.gROOT.GetVersion()
     
     def __init__(self,**kwargs):
         
